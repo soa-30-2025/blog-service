@@ -5,8 +5,11 @@ import (
     "net"
 
     pb "blog-service/proto/blog"
-    "blog-service/server"
     "blog-service/db"
+    "blog-service/repository"
+    "blog-service/services"
+    "blog-service/handlers"
+
     "google.golang.org/grpc"
 )
 
@@ -14,7 +17,9 @@ func main() {
     database := db.Connect()
     defer database.Close()
 
-    blogServer := &server.BlogServer{DB: database}
+    repo := &repository.BlogRepository{DB: database}
+    service := &services.BlogService{Repo: repo}
+    handler := &handlers.BlogHandler{Service: service}
 
     lis, err := net.Listen("tcp", ":50051")
     if err != nil {
@@ -22,7 +27,7 @@ func main() {
     }
 
     grpcServer := grpc.NewServer()
-    pb.RegisterBlogServiceServer(grpcServer, blogServer)
+    pb.RegisterBlogServiceServer(grpcServer, handler)
 
     log.Println("Server pokrenut na :50051")
     if err := grpcServer.Serve(lis); err != nil {

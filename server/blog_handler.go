@@ -1,4 +1,4 @@
-package server
+/*package server
 
 import (
     "context"
@@ -57,3 +57,4 @@ func (s *BlogServer) GetBlog(ctx context.Context, req *pb.GetBlogRequest) (*pb.G
     return &pb.GetBlogResponse{Blog: blog}, nil
 }
 
+*/
