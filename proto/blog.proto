@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package blog;
+option go_package = "proto/blog";
+
+import "google/protobuf/timestamp.proto";
+
+// Model Blog
+message Blog {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string author_id = 4;
+  google.protobuf.Timestamp created_at = 5;
+  repeated string images = 6;
+}
+
+// Request i Response tipovi
+message CreateBlogRequest {
+  Blog blog = 1;
+}
+
+message CreateBlogResponse {
+  Blog blog = 1;
+}
+
+message GetBlogRequest {
+  string id = 1;
+}
+
+message GetBlogResponse {
+  Blog blog = 1;
+}
+
+// Definicija RPC servisa
+service BlogService {
+  rpc CreateBlog (CreateBlogRequest) returns (CreateBlogResponse);
+  rpc GetBlog (GetBlogRequest) returns (GetBlogResponse);
+}

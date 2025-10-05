@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: blog-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: blogdb
+      MYSQL_USER: bloguser
+      MYSQL_PASSWORD: blogpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  blog-service:
+    build: .
+    container_name: blog-service
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "50051:50051"
+    environment:
+      DB_USER: bloguser
+      DB_PASSWORD: blogpass
+      DB_NAME: blogdb
+      DB_HOST: mysql
+    command: ["go", "run", "main.go"]
+
+volumes:
+  mysql_data:
