@@ -12,12 +12,13 @@ message Blog {
   string description = 3;
   string author_id = 4;
   google.protobuf.Timestamp created_at = 5;
-  repeated string images = 6;
 }
 
 // Request i Response tipovi
 message CreateBlogRequest {
-  Blog blog = 1;
+  string title = 1;
+  string description = 2;
+  string author_id = 3;
 }
 
 message CreateBlogResponse {

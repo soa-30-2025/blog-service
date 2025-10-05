@@ -30,7 +30,6 @@ type Blog struct {
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	AuthorId      string                 `protobuf:"bytes,4,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	Images        []string               `protobuf:"bytes,6,rep,name=images,proto3" json:"images,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -100,17 +99,12 @@ func (x *Blog) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *Blog) GetImages() []string {
-	if x != nil {
-		return x.Images
-	}
-	return nil
-}
-
 // Request i Response tipovi
 type CreateBlogRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Blog          *Blog                  `protobuf:"bytes,1,opt,name=blog,proto3" json:"blog,omitempty"`
+	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	AuthorId      string                 `protobuf:"bytes,3,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -145,11 +139,25 @@ func (*CreateBlogRequest) Descriptor() ([]byte, []int) {
 	return file_proto_blog_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateBlogRequest) GetBlog() *Blog {
+func (x *CreateBlogRequest) GetTitle() string {
 	if x != nil {
-		return x.Blog
+		return x.Title
 	}
-	return nil
+	return ""
+}
+
+func (x *CreateBlogRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *CreateBlogRequest) GetAuthorId() string {
+	if x != nil {
+		return x.AuthorId
+	}
+	return ""
 }
 
 type CreateBlogResponse struct {
@@ -288,18 +296,18 @@ var File_proto_blog_proto protoreflect.FileDescriptor
 
 const file_proto_blog_proto_rawDesc = "" +
 	"\n" +
-	"\x10proto/blog.proto\x12\x04blog\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbe\x01\n" +
+	"\x10proto/blog.proto\x12\x04blog\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa6\x01\n" +
 	"\x04Blog\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1b\n" +
 	"\tauthor_id\x18\x04 \x01(\tR\bauthorId\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x12\x16\n" +
-	"\x06images\x18\x06 \x03(\tR\x06images\"3\n" +
-	"\x11CreateBlogRequest\x12\x1e\n" +
-	"\x04blog\x18\x01 \x01(\v2\n" +
-	".blog.BlogR\x04blog\"4\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"h\n" +
+	"\x11CreateBlogRequest\x12\x14\n" +
+	"\x05title\x18\x01 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1b\n" +
+	"\tauthor_id\x18\x03 \x01(\tR\bauthorId\"4\n" +
 	"\x12CreateBlogResponse\x12\x1e\n" +
 	"\x04blog\x18\x01 \x01(\v2\n" +
 	".blog.BlogR\x04blog\" \n" +
@@ -337,18 +345,17 @@ var file_proto_blog_proto_goTypes = []any{
 }
 var file_proto_blog_proto_depIdxs = []int32{
 	5, // 0: blog.Blog.created_at:type_name -> google.protobuf.Timestamp
-	0, // 1: blog.CreateBlogRequest.blog:type_name -> blog.Blog
-	0, // 2: blog.CreateBlogResponse.blog:type_name -> blog.Blog
-	0, // 3: blog.GetBlogResponse.blog:type_name -> blog.Blog
-	1, // 4: blog.BlogService.CreateBlog:input_type -> blog.CreateBlogRequest
-	3, // 5: blog.BlogService.GetBlog:input_type -> blog.GetBlogRequest
-	2, // 6: blog.BlogService.CreateBlog:output_type -> blog.CreateBlogResponse
-	4, // 7: blog.BlogService.GetBlog:output_type -> blog.GetBlogResponse
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	0, // 1: blog.CreateBlogResponse.blog:type_name -> blog.Blog
+	0, // 2: blog.GetBlogResponse.blog:type_name -> blog.Blog
+	1, // 3: blog.BlogService.CreateBlog:input_type -> blog.CreateBlogRequest
+	3, // 4: blog.BlogService.GetBlog:input_type -> blog.GetBlogRequest
+	2, // 5: blog.BlogService.CreateBlog:output_type -> blog.CreateBlogResponse
+	4, // 6: blog.BlogService.GetBlog:output_type -> blog.GetBlogResponse
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_proto_blog_proto_init() }

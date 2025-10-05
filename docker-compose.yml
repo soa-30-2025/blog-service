@@ -1,34 +1,32 @@
-version: "3.9"
-
 services:
-  mysql:
-    image: mysql:8
-    container_name: blog-mysql
-    restart: always
+  postgres:
+    image: postgres:15
+    container_name: blog-postgres
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: blogdb
-      MYSQL_USER: bloguser
-      MYSQL_PASSWORD: blogpass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: blogdb
     ports:
-      - "3307:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    restart: always
 
   blog-service:
     build: .
     container_name: blog-service
-    restart: always
     depends_on:
-      - mysql
+      - postgres
     ports:
       - "50051:50051"
     environment:
-      DB_USER: bloguser
-      DB_PASSWORD: blogpass
-      DB_NAME: blogdb
-      DB_HOST: mysql
-    command: ["go", "run", "main.go"]
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=blogdb
+      - DB_PORT=5432
+    restart: always
 
 volumes:
-  mysql_data:
+  postgres_data:
