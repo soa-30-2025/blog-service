@@ -2,16 +2,18 @@ package handlers
 
 import (
 	"context"
+	"time"
+
 	pb "blog-service/proto/blog"
 	"blog-service/services"
-    "google.golang.org/protobuf/types/known/timestamppb"
-    "time"
 
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type BlogHandler struct {
 	pb.UnimplementedBlogServiceServer
-	Service *services.BlogService
+	BlogService    *services.BlogService
+	CommentService *services.CommentService
 }
 
 func (h *BlogHandler) CreateBlog(ctx context.Context, req *pb.CreateBlogRequest) (*pb.CreateBlogResponse, error) {
@@ -22,12 +24,11 @@ func (h *BlogHandler) CreateBlog(ctx context.Context, req *pb.CreateBlogRequest)
 		CreatedAt:   timestamppb.New(time.Now()),
 	}
 
-	createdBlog, err := h.Service.CreateBlog(ctx, blog)
+	createdBlog, err := h.BlogService.CreateBlog(ctx, blog)
 	if err != nil {
 		return nil, err
 	}
 
-	// Mapiraj createdBlog u pb.Blog za response
 	return &pb.CreateBlogResponse{
 		Blog: &pb.Blog{
 			Id:          createdBlog.ID,
@@ -40,7 +41,7 @@ func (h *BlogHandler) CreateBlog(ctx context.Context, req *pb.CreateBlogRequest)
 }
 
 func (h *BlogHandler) GetBlog(ctx context.Context, req *pb.GetBlogRequest) (*pb.GetBlogResponse, error) {
-	blog, err := h.Service.GetBlog(ctx, req.Id)
+	blog, err := h.BlogService.GetBlog(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -53,5 +54,54 @@ func (h *BlogHandler) GetBlog(ctx context.Context, req *pb.GetBlogRequest) (*pb.
 			AuthorId:    blog.AuthorId,
 			CreatedAt:   timestamppb.New(blog.CreatedAt),
 		},
+	}, nil
+}
+
+func (h *BlogHandler) CreateComment(ctx context.Context, req *pb.CreateCommentRequest) (*pb.CreateCommentResponse, error) {
+	comment := &pb.Comment{
+		BlogId:    req.BlogId,
+		UserId:    req.UserId,
+		Text:      req.Text,
+		CreatedAt: timestamppb.New(time.Now()),
+		UpdatedAt: timestamppb.New(time.Now()),
+	}
+
+	createdComment, err := h.CommentService.CreateComment(ctx, comment)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateCommentResponse{
+		Comment: &pb.Comment{
+			Id:        createdComment.ID,
+			BlogId:    createdComment.BlogID,
+			UserId:    createdComment.UserID,
+			Text:      createdComment.Text,
+			CreatedAt: timestamppb.New(createdComment.CreatedAt),
+			UpdatedAt: timestamppb.New(createdComment.UpdatedAt),
+		},
+	}, nil
+}
+
+func (h *BlogHandler) GetCommentsByBlog(ctx context.Context, req *pb.GetCommentsByBlogRequest) (*pb.GetCommentsByBlogResponse, error) {
+	comments, err := h.CommentService.GetCommentsByBlog(ctx, req.BlogId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pbComments []*pb.Comment
+	for _, c := range comments {
+		pbComments = append(pbComments, &pb.Comment{
+			Id:        c.ID,
+			BlogId:    c.BlogID,
+			UserId:    c.UserID,
+			Text:      c.Text,
+			CreatedAt: timestamppb.New(c.CreatedAt),
+			UpdatedAt: timestamppb.New(c.UpdatedAt),
+		})
+	}
+
+	return &pb.GetCommentsByBlogResponse{
+		Comments: pbComments,
 	}, nil
 }

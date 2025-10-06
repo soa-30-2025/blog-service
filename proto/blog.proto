@@ -33,8 +33,38 @@ message GetBlogResponse {
   Blog blog = 1;
 }
 
+message Comment {
+  string id = 1;
+  string blog_id = 2;
+  string user_id = 3;
+  string text = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateCommentRequest {
+  string blog_id = 1;
+  string user_id = 2;
+  string text = 3;
+}
+
+message CreateCommentResponse {
+  Comment comment = 1;
+}
+
+message GetCommentsByBlogRequest {
+  string blog_id = 1;
+}
+
+message GetCommentsByBlogResponse {
+  repeated Comment comments = 1;
+}
+
 // Definicija RPC servisa
 service BlogService {
   rpc CreateBlog (CreateBlogRequest) returns (CreateBlogResponse);
   rpc GetBlog (GetBlogRequest) returns (GetBlogResponse);
+
+  rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
+  rpc GetCommentsByBlog (GetCommentsByBlogRequest) returns (GetCommentsByBlogResponse);
 }
