@@ -27,24 +27,20 @@ func main() {
 	}
 	defer pool.Close()
 
-	// Repozitorijumi
 	blogRepo := &repository.BlogRepository{DB: pool}
 	commentRepo := &repository.CommentRepository{DB: pool}
     likeRepo := &repository.LikeRepository{DB: pool}
 
-	// Servisi
 	blogService := &services.BlogService{Repo: blogRepo}
 	commentService := &services.CommentService{Repo: commentRepo}
     likeService := &services.LikeService{Repo: likeRepo}
 
-	// Handler koji sadrži oba servisa
 	handler := &handlers.BlogHandler{
 		BlogService:    blogService,
 		CommentService: commentService,
         LikeService: likeService,
 	}
-
-	// Pokretanje gRPC servera
+    
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("❌ Greška pri pokretanju servera: %v", err)
