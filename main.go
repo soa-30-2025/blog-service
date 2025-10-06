@@ -30,15 +30,18 @@ func main() {
 	// Repozitorijumi
 	blogRepo := &repository.BlogRepository{DB: pool}
 	commentRepo := &repository.CommentRepository{DB: pool}
+    likeRepo := &repository.LikeRepository{DB: pool}
 
 	// Servisi
 	blogService := &services.BlogService{Repo: blogRepo}
 	commentService := &services.CommentService{Repo: commentRepo}
+    likeService := &services.LikeService{Repo: likeRepo}
 
 	// Handler koji sadrži oba servisa
 	handler := &handlers.BlogHandler{
 		BlogService:    blogService,
 		CommentService: commentService,
+        LikeService: likeService,
 	}
 
 	// Pokretanje gRPC servera

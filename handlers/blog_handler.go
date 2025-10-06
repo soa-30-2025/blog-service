@@ -14,6 +14,7 @@ type BlogHandler struct {
 	pb.UnimplementedBlogServiceServer
 	BlogService    *services.BlogService
 	CommentService *services.CommentService
+	LikeService *services.LikeService
 }
 
 func (h *BlogHandler) CreateBlog(ctx context.Context, req *pb.CreateBlogRequest) (*pb.CreateBlogResponse, error) {
@@ -123,4 +124,35 @@ func (h *BlogHandler) UpdateComment(ctx context.Context, req *pb.UpdateCommentRe
 		},
 	}, nil
 }
+
+func (h *BlogHandler) LikeBlog(ctx context.Context, req *pb.LikeRequest) (*pb.LikeResponse, error) {
+    if err := h.LikeService.LikeBlog(ctx, req.BlogId, req.UserId); err != nil {
+        return nil, err
+    }
+    count, err := h.LikeService.GetLikesCount(ctx, req.BlogId)
+    if err != nil {
+        return nil, err
+    }
+    return &pb.LikeResponse{LikesCount: int32(count)}, nil
+}
+
+func (h *BlogHandler) UnlikeBlog(ctx context.Context, req *pb.LikeRequest) (*pb.LikeResponse, error) {
+    if err := h.LikeService.UnlikeBlog(ctx, req.BlogId, req.UserId); err != nil {
+        return nil, err
+    }
+    count, err := h.LikeService.GetLikesCount(ctx, req.BlogId)
+    if err != nil {
+        return nil, err
+    }
+    return &pb.LikeResponse{LikesCount: int32(count)}, nil
+}
+
+func (h *BlogHandler) GetLikesCount(ctx context.Context, req *pb.LikeRequest) (*pb.LikeResponse, error) {
+    count, err := h.LikeService.GetLikesCount(ctx, req.BlogId)
+    if err != nil {
+        return nil, err
+    }
+    return &pb.LikeResponse{LikesCount: int32(count)}, nil
+}
+
 

@@ -5,7 +5,6 @@ option go_package = "proto/blog";
 
 import "google/protobuf/timestamp.proto";
 
-// Model Blog
 message Blog {
   string id = 1;
   string title = 2;
@@ -14,7 +13,6 @@ message Blog {
   google.protobuf.Timestamp created_at = 5;
 }
 
-// Request i Response tipovi
 message CreateBlogRequest {
   string title = 1;
   string description = 2;
@@ -69,13 +67,24 @@ message UpdateCommentResponse {
   Comment comment = 1;
 }
 
-// Definicija RPC servisa
+message LikeRequest {
+  string blog_id = 1;
+  string user_id = 2;
+}
+
+message LikeResponse {
+  int32 likes_count = 1;
+}
+
 service BlogService {
   rpc CreateBlog (CreateBlogRequest) returns (CreateBlogResponse);
   rpc GetBlog (GetBlogRequest) returns (GetBlogResponse);
 
   rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
   rpc GetCommentsByBlog (GetCommentsByBlogRequest) returns (GetCommentsByBlogResponse);
-
   rpc UpdateComment (UpdateCommentRequest) returns (UpdateCommentResponse);
+
+  rpc LikeBlog (LikeRequest) returns (LikeResponse);
+  rpc UnlikeBlog (LikeRequest) returns (LikeResponse);
+  rpc GetLikesCount (LikeRequest) returns (LikeResponse);
 }
