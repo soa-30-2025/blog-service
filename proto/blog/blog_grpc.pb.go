@@ -23,6 +23,7 @@ const (
 	BlogService_GetBlog_FullMethodName           = "/blog.BlogService/GetBlog"
 	BlogService_CreateComment_FullMethodName     = "/blog.BlogService/CreateComment"
 	BlogService_GetCommentsByBlog_FullMethodName = "/blog.BlogService/GetCommentsByBlog"
+	BlogService_UpdateComment_FullMethodName     = "/blog.BlogService/UpdateComment"
 )
 
 // BlogServiceClient is the client API for BlogService service.
@@ -35,6 +36,7 @@ type BlogServiceClient interface {
 	GetBlog(ctx context.Context, in *GetBlogRequest, opts ...grpc.CallOption) (*GetBlogResponse, error)
 	CreateComment(ctx context.Context, in *CreateCommentRequest, opts ...grpc.CallOption) (*CreateCommentResponse, error)
 	GetCommentsByBlog(ctx context.Context, in *GetCommentsByBlogRequest, opts ...grpc.CallOption) (*GetCommentsByBlogResponse, error)
+	UpdateComment(ctx context.Context, in *UpdateCommentRequest, opts ...grpc.CallOption) (*UpdateCommentResponse, error)
 }
 
 type blogServiceClient struct {
@@ -85,6 +87,16 @@ func (c *blogServiceClient) GetCommentsByBlog(ctx context.Context, in *GetCommen
 	return out, nil
 }
 
+func (c *blogServiceClient) UpdateComment(ctx context.Context, in *UpdateCommentRequest, opts ...grpc.CallOption) (*UpdateCommentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateCommentResponse)
+	err := c.cc.Invoke(ctx, BlogService_UpdateComment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlogServiceServer is the server API for BlogService service.
 // All implementations must embed UnimplementedBlogServiceServer
 // for forward compatibility.
@@ -95,6 +107,7 @@ type BlogServiceServer interface {
 	GetBlog(context.Context, *GetBlogRequest) (*GetBlogResponse, error)
 	CreateComment(context.Context, *CreateCommentRequest) (*CreateCommentResponse, error)
 	GetCommentsByBlog(context.Context, *GetCommentsByBlogRequest) (*GetCommentsByBlogResponse, error)
+	UpdateComment(context.Context, *UpdateCommentRequest) (*UpdateCommentResponse, error)
 	mustEmbedUnimplementedBlogServiceServer()
 }
 
@@ -116,6 +129,9 @@ func (UnimplementedBlogServiceServer) CreateComment(context.Context, *CreateComm
 }
 func (UnimplementedBlogServiceServer) GetCommentsByBlog(context.Context, *GetCommentsByBlogRequest) (*GetCommentsByBlogResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommentsByBlog not implemented")
+}
+func (UnimplementedBlogServiceServer) UpdateComment(context.Context, *UpdateCommentRequest) (*UpdateCommentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateComment not implemented")
 }
 func (UnimplementedBlogServiceServer) mustEmbedUnimplementedBlogServiceServer() {}
 func (UnimplementedBlogServiceServer) testEmbeddedByValue()                     {}
@@ -210,6 +226,24 @@ func _BlogService_GetCommentsByBlog_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BlogService_UpdateComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogServiceServer).UpdateComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlogService_UpdateComment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogServiceServer).UpdateComment(ctx, req.(*UpdateCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BlogService_ServiceDesc is the grpc.ServiceDesc for BlogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -232,6 +266,10 @@ var BlogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCommentsByBlog",
 			Handler:    _BlogService_GetCommentsByBlog_Handler,
+		},
+		{
+			MethodName: "UpdateComment",
+			Handler:    _BlogService_UpdateComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

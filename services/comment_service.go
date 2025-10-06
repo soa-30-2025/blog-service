@@ -18,3 +18,8 @@ func (s *CommentService) CreateComment(ctx context.Context, comment *pb.Comment)
 func (s *CommentService) GetCommentsByBlog(ctx context.Context, blogID string) ([]models.Comment, error) {
     return s.Repo.GetByBlogID(ctx, blogID)
 }
+
+func (s *CommentService) UpdateComment(ctx context.Context, id string, text string) (*models.Comment, error) {
+	return s.Repo.Update(ctx, id, text)
+}
+

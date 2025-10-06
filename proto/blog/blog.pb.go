@@ -568,6 +568,102 @@ func (x *GetCommentsByBlogResponse) GetComments() []*Comment {
 	return nil
 }
 
+type UpdateCommentRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Text          string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCommentRequest) Reset() {
+	*x = UpdateCommentRequest{}
+	mi := &file_proto_blog_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCommentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCommentRequest) ProtoMessage() {}
+
+func (x *UpdateCommentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_blog_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCommentRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCommentRequest) Descriptor() ([]byte, []int) {
+	return file_proto_blog_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *UpdateCommentRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UpdateCommentRequest) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+type UpdateCommentResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Comment       *Comment               `protobuf:"bytes,1,opt,name=comment,proto3" json:"comment,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCommentResponse) Reset() {
+	*x = UpdateCommentResponse{}
+	mi := &file_proto_blog_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCommentResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCommentResponse) ProtoMessage() {}
+
+func (x *UpdateCommentResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_blog_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCommentResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCommentResponse) Descriptor() ([]byte, []int) {
+	return file_proto_blog_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *UpdateCommentResponse) GetComment() *Comment {
+	if x != nil {
+		return x.Comment
+	}
+	return nil
+}
+
 var File_proto_blog_proto protoreflect.FileDescriptor
 
 const file_proto_blog_proto_rawDesc = "" +
@@ -610,13 +706,19 @@ const file_proto_blog_proto_rawDesc = "" +
 	"\x18GetCommentsByBlogRequest\x12\x17\n" +
 	"\ablog_id\x18\x01 \x01(\tR\x06blogId\"F\n" +
 	"\x19GetCommentsByBlogResponse\x12)\n" +
-	"\bcomments\x18\x01 \x03(\v2\r.blog.CommentR\bcomments2\xa6\x02\n" +
+	"\bcomments\x18\x01 \x03(\v2\r.blog.CommentR\bcomments\":\n" +
+	"\x14UpdateCommentRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04text\x18\x02 \x01(\tR\x04text\"@\n" +
+	"\x15UpdateCommentResponse\x12'\n" +
+	"\acomment\x18\x01 \x01(\v2\r.blog.CommentR\acomment2\xf0\x02\n" +
 	"\vBlogService\x12?\n" +
 	"\n" +
 	"CreateBlog\x12\x17.blog.CreateBlogRequest\x1a\x18.blog.CreateBlogResponse\x126\n" +
 	"\aGetBlog\x12\x14.blog.GetBlogRequest\x1a\x15.blog.GetBlogResponse\x12H\n" +
 	"\rCreateComment\x12\x1a.blog.CreateCommentRequest\x1a\x1b.blog.CreateCommentResponse\x12T\n" +
-	"\x11GetCommentsByBlog\x12\x1e.blog.GetCommentsByBlogRequest\x1a\x1f.blog.GetCommentsByBlogResponseB\fZ\n" +
+	"\x11GetCommentsByBlog\x12\x1e.blog.GetCommentsByBlogRequest\x1a\x1f.blog.GetCommentsByBlogResponse\x12H\n" +
+	"\rUpdateComment\x12\x1a.blog.UpdateCommentRequest\x1a\x1b.blog.UpdateCommentResponseB\fZ\n" +
 	"proto/blogb\x06proto3"
 
 var (
@@ -631,7 +733,7 @@ func file_proto_blog_proto_rawDescGZIP() []byte {
 	return file_proto_blog_proto_rawDescData
 }
 
-var file_proto_blog_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_proto_blog_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_proto_blog_proto_goTypes = []any{
 	(*Blog)(nil),                      // 0: blog.Blog
 	(*CreateBlogRequest)(nil),         // 1: blog.CreateBlogRequest
@@ -643,29 +745,34 @@ var file_proto_blog_proto_goTypes = []any{
 	(*CreateCommentResponse)(nil),     // 7: blog.CreateCommentResponse
 	(*GetCommentsByBlogRequest)(nil),  // 8: blog.GetCommentsByBlogRequest
 	(*GetCommentsByBlogResponse)(nil), // 9: blog.GetCommentsByBlogResponse
-	(*timestamppb.Timestamp)(nil),     // 10: google.protobuf.Timestamp
+	(*UpdateCommentRequest)(nil),      // 10: blog.UpdateCommentRequest
+	(*UpdateCommentResponse)(nil),     // 11: blog.UpdateCommentResponse
+	(*timestamppb.Timestamp)(nil),     // 12: google.protobuf.Timestamp
 }
 var file_proto_blog_proto_depIdxs = []int32{
-	10, // 0: blog.Blog.created_at:type_name -> google.protobuf.Timestamp
+	12, // 0: blog.Blog.created_at:type_name -> google.protobuf.Timestamp
 	0,  // 1: blog.CreateBlogResponse.blog:type_name -> blog.Blog
 	0,  // 2: blog.GetBlogResponse.blog:type_name -> blog.Blog
-	10, // 3: blog.Comment.created_at:type_name -> google.protobuf.Timestamp
-	10, // 4: blog.Comment.updated_at:type_name -> google.protobuf.Timestamp
+	12, // 3: blog.Comment.created_at:type_name -> google.protobuf.Timestamp
+	12, // 4: blog.Comment.updated_at:type_name -> google.protobuf.Timestamp
 	5,  // 5: blog.CreateCommentResponse.comment:type_name -> blog.Comment
 	5,  // 6: blog.GetCommentsByBlogResponse.comments:type_name -> blog.Comment
-	1,  // 7: blog.BlogService.CreateBlog:input_type -> blog.CreateBlogRequest
-	3,  // 8: blog.BlogService.GetBlog:input_type -> blog.GetBlogRequest
-	6,  // 9: blog.BlogService.CreateComment:input_type -> blog.CreateCommentRequest
-	8,  // 10: blog.BlogService.GetCommentsByBlog:input_type -> blog.GetCommentsByBlogRequest
-	2,  // 11: blog.BlogService.CreateBlog:output_type -> blog.CreateBlogResponse
-	4,  // 12: blog.BlogService.GetBlog:output_type -> blog.GetBlogResponse
-	7,  // 13: blog.BlogService.CreateComment:output_type -> blog.CreateCommentResponse
-	9,  // 14: blog.BlogService.GetCommentsByBlog:output_type -> blog.GetCommentsByBlogResponse
-	11, // [11:15] is the sub-list for method output_type
-	7,  // [7:11] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	5,  // 7: blog.UpdateCommentResponse.comment:type_name -> blog.Comment
+	1,  // 8: blog.BlogService.CreateBlog:input_type -> blog.CreateBlogRequest
+	3,  // 9: blog.BlogService.GetBlog:input_type -> blog.GetBlogRequest
+	6,  // 10: blog.BlogService.CreateComment:input_type -> blog.CreateCommentRequest
+	8,  // 11: blog.BlogService.GetCommentsByBlog:input_type -> blog.GetCommentsByBlogRequest
+	10, // 12: blog.BlogService.UpdateComment:input_type -> blog.UpdateCommentRequest
+	2,  // 13: blog.BlogService.CreateBlog:output_type -> blog.CreateBlogResponse
+	4,  // 14: blog.BlogService.GetBlog:output_type -> blog.GetBlogResponse
+	7,  // 15: blog.BlogService.CreateComment:output_type -> blog.CreateCommentResponse
+	9,  // 16: blog.BlogService.GetCommentsByBlog:output_type -> blog.GetCommentsByBlogResponse
+	11, // 17: blog.BlogService.UpdateComment:output_type -> blog.UpdateCommentResponse
+	13, // [13:18] is the sub-list for method output_type
+	8,  // [8:13] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_proto_blog_proto_init() }
@@ -679,7 +786,7 @@ func file_proto_blog_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_blog_proto_rawDesc), len(file_proto_blog_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

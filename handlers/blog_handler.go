@@ -105,3 +105,22 @@ func (h *BlogHandler) GetCommentsByBlog(ctx context.Context, req *pb.GetComments
 		Comments: pbComments,
 	}, nil
 }
+
+func (h *BlogHandler) UpdateComment(ctx context.Context, req *pb.UpdateCommentRequest) (*pb.UpdateCommentResponse, error) {
+	updatedComment, err := h.CommentService.UpdateComment(ctx, req.Id, req.Text)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdateCommentResponse{
+		Comment: &pb.Comment{
+			Id:        updatedComment.ID,
+			BlogId:    updatedComment.BlogID,
+			UserId:    updatedComment.UserID,
+			Text:      updatedComment.Text,
+			CreatedAt: timestamppb.New(updatedComment.CreatedAt),
+			UpdatedAt: timestamppb.New(updatedComment.UpdatedAt),
+		},
+	}, nil
+}
+

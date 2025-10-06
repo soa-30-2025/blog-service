@@ -54,3 +54,21 @@ func (r *CommentRepository) GetByBlogID(ctx context.Context, blogID string) ([]m
 
     return comments, nil
 }
+
+func (r *CommentRepository) Update(ctx context.Context, id string, text string) (*models.Comment, error) {
+	query := `
+		UPDATE comments
+		SET text = $1, updated_at = NOW()
+		WHERE id = $2
+		RETURNING id, blog_id, user_id, text, created_at, updated_at
+	`
+
+	var c models.Comment
+	row := r.DB.QueryRow(ctx, query, text, id)
+	if err := row.Scan(&c.ID, &c.BlogID, &c.UserID, &c.Text, &c.CreatedAt, &c.UpdatedAt); err != nil {
+		return nil, err
+	}
+
+	return &c, nil
+}
+

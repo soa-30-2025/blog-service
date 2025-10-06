@@ -60,6 +60,15 @@ message GetCommentsByBlogResponse {
   repeated Comment comments = 1;
 }
 
+message UpdateCommentRequest {
+  string id = 1;
+  string text = 2;
+}
+
+message UpdateCommentResponse {
+  Comment comment = 1;
+}
+
 // Definicija RPC servisa
 service BlogService {
   rpc CreateBlog (CreateBlogRequest) returns (CreateBlogResponse);
@@ -67,4 +76,6 @@ service BlogService {
 
   rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
   rpc GetCommentsByBlog (GetCommentsByBlogRequest) returns (GetCommentsByBlogResponse);
+
+  rpc UpdateComment (UpdateCommentRequest) returns (UpdateCommentResponse);
 }
