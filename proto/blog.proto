@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package blog;
+option go_package = "proto/blog";
+
+import "google/protobuf/timestamp.proto";
+
+message Blog {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string author_id = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message CreateBlogRequest {
+  string title = 1;
+  string description = 2;
+  string author_id = 3;
+}
+
+message CreateBlogResponse {
+  Blog blog = 1;
+}
+
+message GetBlogRequest {
+  string id = 1;
+}
+
+message GetBlogResponse {
+  Blog blog = 1;
+}
+
+message Comment {
+  string id = 1;
+  string blog_id = 2;
+  string user_id = 3;
+  string text = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateCommentRequest {
+  string blog_id = 1;
+  string user_id = 2;
+  string text = 3;
+}
+
+message CreateCommentResponse {
+  Comment comment = 1;
+}
+
+message GetCommentsByBlogRequest {
+  string blog_id = 1;
+}
+
+message GetCommentsByBlogResponse {
+  repeated Comment comments = 1;
+}
+
+message UpdateCommentRequest {
+  string id = 1;
+  string text = 2;
+}
+
+message UpdateCommentResponse {
+  Comment comment = 1;
+}
+
+message LikeRequest {
+  string blog_id = 1;
+  string user_id = 2;
+}
+
+message LikeResponse {
+  int32 likes_count = 1;
+}
+
+service BlogService {
+  rpc CreateBlog (CreateBlogRequest) returns (CreateBlogResponse);
+  rpc GetBlog (GetBlogRequest) returns (GetBlogResponse);
+
+  rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
+  rpc GetCommentsByBlog (GetCommentsByBlogRequest) returns (GetCommentsByBlogResponse);
+  rpc UpdateComment (UpdateCommentRequest) returns (UpdateCommentResponse);
+
+  rpc LikeBlog (LikeRequest) returns (LikeResponse);
+  rpc UnlikeBlog (LikeRequest) returns (LikeResponse);
+  rpc GetLikesCount (LikeRequest) returns (LikeResponse);
+}

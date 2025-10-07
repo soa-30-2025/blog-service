@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: blog-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: blogdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    restart: always
+
+  blog-service:
+    build: .
+    container_name: blog-service
+    depends_on:
+      - postgres
+    ports:
+      - "50051:50051"
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=blogdb
+      - DB_PORT=5432
+    restart: always
+
+volumes:
+  postgres_data:
