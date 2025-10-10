@@ -12,18 +12,22 @@ import (
 	"blog-service/services"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
 func main() {
+
+	err := godotenv.Load()
+    if err != nil {
+        log.Fatalln("Error while loading .env file")
+    }
+
 	dbUrl := os.Getenv("DATABASE_URL")
-	if dbUrl == "" {
-		dbUrl = "postgres://postgres:password@postgres:5432/blogdb?sslmode=disable"
-	}
 
 	pool, err := pgxpool.New(context.Background(), dbUrl)
 	if err != nil {
-		log.Fatalf("❌ Neuspešno povezivanje sa bazom: %v", err)
+		log.Fatalf("Neuspešno povezivanje sa bazom: %v", err)
 	}
 	defer pool.Close()
 
@@ -41,16 +45,17 @@ func main() {
         LikeService: likeService,
 	}
     
-	lis, err := net.Listen("tcp", ":50051")
+	port:= os.Getenv("PORT")
+	lis, err := net.Listen("tcp", ":" + port)
 	if err != nil {
-		log.Fatalf("❌ Greška pri pokretanju servera: %v", err)
+		log.Fatalf("Greška pri pokretanju servera: %v", err)
 	}
 
 	grpcServer := grpc.NewServer()
 	pb.RegisterBlogServiceServer(grpcServer, handler)
 
-	log.Println("✅ gRPC server pokrenut na portu :50051")
+	log.Println("gRPC server pokrenut na portu " + port)
 	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatalf("❌ Greška pri radu servera: %v", err)
+		log.Fatalf("Greška pri radu servera: %v", err)
 	}
 }
