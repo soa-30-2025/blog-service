@@ -6,6 +6,7 @@ import (
 
 	pb "blog-service/proto/blog"
 	"blog-service/services"
+	"blog-service/utils"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -18,10 +19,13 @@ type BlogHandler struct {
 }
 
 func (h *BlogHandler) CreateBlog(ctx context.Context, req *pb.CreateBlogRequest) (*pb.CreateBlogResponse, error) {
+	meta := utils.ExtractMetadata(ctx)
+    authorID := meta["x-user-id"]
+
 	blog := &pb.Blog{
 		Title:       req.Title,
 		Description: req.Description,
-		AuthorId:    req.AuthorId,
+		AuthorId:    authorID,
 		CreatedAt:   timestamppb.New(time.Now()),
 	}
 
@@ -59,9 +63,12 @@ func (h *BlogHandler) GetBlog(ctx context.Context, req *pb.GetBlogRequest) (*pb.
 }
 
 func (h *BlogHandler) CreateComment(ctx context.Context, req *pb.CreateCommentRequest) (*pb.CreateCommentResponse, error) {
+	meta := utils.ExtractMetadata(ctx)
+    authorID := meta["x-user-id"]
+
 	comment := &pb.Comment{
 		BlogId:    req.BlogId,
-		UserId:    req.UserId,
+		UserId:    authorID,
 		Text:      req.Text,
 		CreatedAt: timestamppb.New(time.Now()),
 		UpdatedAt: timestamppb.New(time.Now()),
@@ -155,4 +162,22 @@ func (h *BlogHandler) GetLikesCount(ctx context.Context, req *pb.LikeRequest) (*
     return &pb.LikeResponse{LikesCount: int32(count)}, nil
 }
 
+func (h *BlogHandler) GetAllBlogs(ctx context.Context, req *pb.GetAllBlogsRequest) (*pb.GetAllBlogsResponse, error) {
+	blogs, err := h.BlogService.GetAllBlogs(ctx)
+	if err != nil {
+		return nil, err
+	}
 
+	var pbBlogs []*pb.Blog
+	for _, b := range blogs {
+		pbBlogs = append(pbBlogs, &pb.Blog{
+			Id:          b.ID,
+			Title:       b.Title,
+			Description: b.Description,
+			AuthorId:    b.AuthorId,
+			CreatedAt:   timestamppb.New(b.CreatedAt),
+		})
+	}
+
+	return &pb.GetAllBlogsResponse{Blogs: pbBlogs}, nil
+}

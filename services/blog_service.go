@@ -1,10 +1,10 @@
 package services
 
 import (
-    pb "blog-service/proto/blog"
-    models "blog-service/models"
-    "blog-service/repository"
-    "context"
+	models "blog-service/models"
+	pb "blog-service/proto/blog"
+	"blog-service/repository"
+	"context"
 )
 
 type BlogService struct {
@@ -17,6 +17,10 @@ func (s *BlogService) CreateBlog(ctx context.Context, blog *pb.Blog) (*models.Bl
 
 func (s *BlogService) GetBlog(ctx context.Context, id string) (*models.Blog, error) {
     return s.Repo.GetByID(ctx, id)
+}
+
+func (s *BlogService) GetAllBlogs(ctx context.Context) ([]*models.Blog, error) {
+	return s.Repo.GetAllBlogs(ctx)
 }
 
 

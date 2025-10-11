@@ -1,11 +1,12 @@
 package repository
 
 import (
-    models "blog-service/models"
-    pb "blog-service/proto/blog"
-    "time"
-    "github.com/jackc/pgx/v5/pgxpool"
-    "context"
+	models "blog-service/models"
+	pb "blog-service/proto/blog"
+	"context"
+	"time"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type BlogRepository struct {
@@ -39,3 +40,23 @@ func (r *BlogRepository) GetByID(ctx context.Context, id string) (*models.Blog, 
 
 	return &b, nil
 }
+
+func (r *BlogRepository) GetAllBlogs(ctx context.Context) ([]*models.Blog, error) {
+	rows, err := r.DB.Query(ctx, `SELECT id, title, description, author_id, created_at FROM blogs ORDER BY created_at DESC`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var blogs []*models.Blog
+	for rows.Next() {
+		var b models.Blog
+		err := rows.Scan(&b.ID, &b.Title, &b.Description, &b.AuthorId, &b.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		blogs = append(blogs, &b)
+	}
+	return blogs, nil
+}
+
