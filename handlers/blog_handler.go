@@ -133,7 +133,9 @@ func (h *BlogHandler) UpdateComment(ctx context.Context, req *pb.UpdateCommentRe
 }
 
 func (h *BlogHandler) LikeBlog(ctx context.Context, req *pb.LikeRequest) (*pb.LikeResponse, error) {
-    if err := h.LikeService.LikeBlog(ctx, req.BlogId, req.UserId); err != nil {
+	meta := utils.ExtractMetadata(ctx)
+    authorID := meta["x-user-id"]
+    if err := h.LikeService.LikeBlog(ctx, req.BlogId, authorID); err != nil {
         return nil, err
     }
     count, err := h.LikeService.GetLikesCount(ctx, req.BlogId)
@@ -144,7 +146,9 @@ func (h *BlogHandler) LikeBlog(ctx context.Context, req *pb.LikeRequest) (*pb.Li
 }
 
 func (h *BlogHandler) UnlikeBlog(ctx context.Context, req *pb.LikeRequest) (*pb.LikeResponse, error) {
-    if err := h.LikeService.UnlikeBlog(ctx, req.BlogId, req.UserId); err != nil {
+	meta := utils.ExtractMetadata(ctx)
+    authorID := meta["x-user-id"]
+    if err := h.LikeService.UnlikeBlog(ctx, req.BlogId, authorID); err != nil {
         return nil, err
     }
     count, err := h.LikeService.GetLikesCount(ctx, req.BlogId)
@@ -180,4 +184,15 @@ func (h *BlogHandler) GetAllBlogs(ctx context.Context, req *pb.GetAllBlogsReques
 	}
 
 	return &pb.GetAllBlogsResponse{Blogs: pbBlogs}, nil
+}
+
+func (h *BlogHandler) GetLikedUsers(ctx context.Context, req *pb.GetLikedUsersRequest) (*pb.GetLikedUsersResponse, error) {
+    userIDs, err := h.LikeService.GetLikedUsers(ctx, req.BlogId)
+    if err != nil {
+        return nil, err
+    }
+
+    return &pb.GetLikedUsersResponse{
+        UserIds: userIDs,
+    }, nil
 }

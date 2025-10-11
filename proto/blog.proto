@@ -67,7 +67,6 @@ message UpdateCommentResponse {
 
 message LikeRequest {
   string blog_id = 1;
-  string user_id = 2;
 }
 
 message LikeResponse {
@@ -78,6 +77,14 @@ message GetAllBlogsRequest {}
 
 message GetAllBlogsResponse {
   repeated Blog blogs = 1;
+}
+
+message GetLikedUsersRequest {
+  string blog_id = 1;
+}
+
+message GetLikedUsersResponse {
+  repeated string user_ids = 1;
 }
 
 service BlogService {
@@ -92,4 +99,5 @@ service BlogService {
   rpc LikeBlog (LikeRequest) returns (LikeResponse);
   rpc UnlikeBlog (LikeRequest) returns (LikeResponse);
   rpc GetLikesCount (LikeRequest) returns (LikeResponse);
+  rpc GetLikedUsers (GetLikedUsersRequest) returns (GetLikedUsersResponse);
 }

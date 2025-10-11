@@ -28,6 +28,7 @@ const (
 	BlogService_LikeBlog_FullMethodName          = "/blog.BlogService/LikeBlog"
 	BlogService_UnlikeBlog_FullMethodName        = "/blog.BlogService/UnlikeBlog"
 	BlogService_GetLikesCount_FullMethodName     = "/blog.BlogService/GetLikesCount"
+	BlogService_GetLikedUsers_FullMethodName     = "/blog.BlogService/GetLikedUsers"
 )
 
 // BlogServiceClient is the client API for BlogService service.
@@ -43,6 +44,7 @@ type BlogServiceClient interface {
 	LikeBlog(ctx context.Context, in *LikeRequest, opts ...grpc.CallOption) (*LikeResponse, error)
 	UnlikeBlog(ctx context.Context, in *LikeRequest, opts ...grpc.CallOption) (*LikeResponse, error)
 	GetLikesCount(ctx context.Context, in *LikeRequest, opts ...grpc.CallOption) (*LikeResponse, error)
+	GetLikedUsers(ctx context.Context, in *GetLikedUsersRequest, opts ...grpc.CallOption) (*GetLikedUsersResponse, error)
 }
 
 type blogServiceClient struct {
@@ -143,6 +145,16 @@ func (c *blogServiceClient) GetLikesCount(ctx context.Context, in *LikeRequest, 
 	return out, nil
 }
 
+func (c *blogServiceClient) GetLikedUsers(ctx context.Context, in *GetLikedUsersRequest, opts ...grpc.CallOption) (*GetLikedUsersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetLikedUsersResponse)
+	err := c.cc.Invoke(ctx, BlogService_GetLikedUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlogServiceServer is the server API for BlogService service.
 // All implementations must embed UnimplementedBlogServiceServer
 // for forward compatibility.
@@ -156,6 +168,7 @@ type BlogServiceServer interface {
 	LikeBlog(context.Context, *LikeRequest) (*LikeResponse, error)
 	UnlikeBlog(context.Context, *LikeRequest) (*LikeResponse, error)
 	GetLikesCount(context.Context, *LikeRequest) (*LikeResponse, error)
+	GetLikedUsers(context.Context, *GetLikedUsersRequest) (*GetLikedUsersResponse, error)
 	mustEmbedUnimplementedBlogServiceServer()
 }
 
@@ -192,6 +205,9 @@ func (UnimplementedBlogServiceServer) UnlikeBlog(context.Context, *LikeRequest) 
 }
 func (UnimplementedBlogServiceServer) GetLikesCount(context.Context, *LikeRequest) (*LikeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLikesCount not implemented")
+}
+func (UnimplementedBlogServiceServer) GetLikedUsers(context.Context, *GetLikedUsersRequest) (*GetLikedUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLikedUsers not implemented")
 }
 func (UnimplementedBlogServiceServer) mustEmbedUnimplementedBlogServiceServer() {}
 func (UnimplementedBlogServiceServer) testEmbeddedByValue()                     {}
@@ -376,6 +392,24 @@ func _BlogService_GetLikesCount_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BlogService_GetLikedUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLikedUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogServiceServer).GetLikedUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BlogService_GetLikedUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogServiceServer).GetLikedUsers(ctx, req.(*GetLikedUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BlogService_ServiceDesc is the grpc.ServiceDesc for BlogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -418,6 +452,10 @@ var BlogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetLikesCount",
 			Handler:    _BlogService_GetLikesCount_Handler,
+		},
+		{
+			MethodName: "GetLikedUsers",
+			Handler:    _BlogService_GetLikedUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -28,3 +28,25 @@ func (r *LikeRepository) CountLikes(ctx context.Context, blogID string) (int, er
     err := r.DB.QueryRow(ctx, query, blogID).Scan(&count)
     return count, err
 }
+
+func (r *LikeRepository) GetLikedUserIDs(ctx context.Context, blogID string) ([]string, error) {
+    rows, err := r.DB.Query(context.Background(), `
+        SELECT user_id
+        FROM likes
+        WHERE blog_id = $1
+    `, blogID)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var userIDs []string
+    for rows.Next() {
+        var userID string
+        if err := rows.Scan(&userID); err != nil {
+            return nil, err
+        }
+        userIDs = append(userIDs, userID)
+    }
+    return userIDs, nil
+}
