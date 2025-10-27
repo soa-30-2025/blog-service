@@ -6,27 +6,25 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: blogdb
-    networks:
-      - soa-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./migrations:/docker-entrypoint-initdb.d
-    restart: always
+    networks:
+      - soa-network
 
   blog-service:
     build: .
     container_name: blog-service
     depends_on:
       - postgres
-    networks:
-      - soa-network
     environment:
       - DB_HOST=postgres
       - DB_USER=postgres
       - DB_PASSWORD=password
       - DB_NAME=blogdb
       - DB_PORT=5432
-    restart: always
+    networks:
+      - soa-network
 
 volumes:
   postgres_data:
